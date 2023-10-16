@@ -24,15 +24,22 @@ document.addEventListener('DOMContentLoaded', renderPage);
 let userData = localStorage.getItem(LS_KEY) || {};
 
 // function input
-function handlerInput(event) {
-
-    localStorage.setItem(LS_KEY, userData)
+function handlerInput(e) {
+    const target = e.target;
+    const formElValue = target.value;
+    const formElName = target.name;
+    userData[formElName] = formElValue;
+    localStorage.setItem(LS_KEY, JSON.stringify(userData));
 }
 
 // function submit
 function handlerSubmit(event) {
     event.preventDefault();
     const { email, message } = event.currentTarget.elements;
+
+    if (!email.value || !message.value) {
+        alert("all fields must be filled")
+    }
 
     data = {
         email: email.value,
@@ -47,6 +54,30 @@ function handlerSubmit(event) {
 }
 
 // function DOM
-function renderPage(){}
+function renderPage() {
+    const userDataFromLS = JSON.parse(localStorage.getItem(LS_KEY));
+
+    const load = key => {
+  try {
+    const serializedState = localStorage.getItem(key);
+    return serializedState === null ? undefined : JSON.parse(serializedState);
+  } catch (error) {
+    console.error("Get state error: ", error.message);
+  }
+    };
+    
+    if (!userDataFromLS) {
+        return;
+    }
+    const formElements = form.elements;
+    for (const key in userDataFromLS) {
+        if (userDataFromLS.hasOwnProperty(key)) {
+            formElements[key].value = userDataFromLS[key];
+            if (userDataFromLS[key]) {
+                userData[key] = userDataFromLS[key]
+            }
+        }
+    }
+}
 
 
