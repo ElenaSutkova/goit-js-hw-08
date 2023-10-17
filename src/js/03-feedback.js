@@ -43,7 +43,7 @@ function handlerSubmit(event) {
   if (!email.value || !message.value) {
     return alert('all fields must be filled');
   }
-  data = {
+  const data = {
     email: email.value,
     message: message.value,
   };
